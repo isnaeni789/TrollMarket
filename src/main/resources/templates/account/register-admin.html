@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head th:replace="~{layout :: head}"></head>
+  <body>
+    <section class="section pb-3 pt-2">
+      <nav th:replace="~{layout :: level}"></nav>
+      <nav th:replace="~{layout :: navigation}"></nav>
+      <section class="section p-4">
+        <nav th:replace="~{layout :: header (Admin, 'Insert New Admin')}"></nav>
+        <h1 class="title">Insert New Admin</h1>
+        <form
+          method="post"
+          th:object="${dto}"
+          th:attr="action=@{/admin/save-account}">
+          <input
+            type="hidden"
+            th:name="${_csrf.parameterName}"
+            th:value="${_csrf.token}" />
+          <div class="field">
+            <label class="label">Username*</label>
+            <div class="control">
+              <input
+                class="input"
+                type="text"
+                th:field="*{username}"
+                placeholder="Username" />
+            </div>
+            <p class="help is-danger" th:errors="*{username}"></p>
+          </div>
+          <div class="field">
+            <label class="label">Password*</label>
+            <div class="control">
+              <input
+                class="input"
+                type="password"
+                th:field="*{password}"
+                placeholder="Password" />
+            </div>
+            <p class="help is-danger" th:errors="*{password}"></p>
+          </div>
+          <div class="field">
+            <label class="label">Confirm Password*</label>
+            <div class="control">
+              <input
+                class="input"
+                type="password"
+                th:field="*{confirmPassword}"
+                placeholder="Confirm Password" />
+            </div>
+            <p class="help is-danger" th:errors="${dto}"></p>
+          </div>
+          <input type="hidden" th:value="${role}" id="role" name="role" />
+          <div class="field is-grouped">
+            <div class="control">
+              <button class="button is-link" type="submit">Submit</button>
+            </div>
+            <div class="control">
+              <a class="button is-link is-light" th:href="@{/}">Cancel</a>
+            </div>
+          </div>
+          <p class="help is-danger" th:errors="*{role}"></p>
+        </form>
+      </section>
+    </section>
+    <footer th:replace="~{layout :: footer}"></footer>
+    <th:block th:replace="~{layout :: javascript}"></th:block>
+  </body>
+</html>

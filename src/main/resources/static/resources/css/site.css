@@ -1,0 +1,32 @@
+html,
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+body > footer {
+  margin-top: auto;
+}
+a.split {
+  float: right;
+}
+.navbar-item.logout {
+  padding: 0px;
+}
+button.button.is-medium.is-info.has-text-warning {
+  padding-left: 0.6em;
+}
+.navbar .navbar-brand {
+  text-align: center;
+  display: block;
+  width: 100%;
+}
+
+.navbar .navbar-brand > .navbar-item,
+.navbar .navbar-brand .navbar-link {
+  display: inline-block;
+  padding: 1rem;
+}
+.hero.is-fullheight-with-navbar {
+  min-height: calc(100vh - 10rem);
+}

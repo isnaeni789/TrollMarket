@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Troll Market</title>
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/favicon.png}" />
+    <link rel="stylesheet" th:href="@{/resources/css/bulma.css}" />
+    <link rel="stylesheet" th:href="@{/resources/css/font-awesome.css}" />
+    <link rel="stylesheet" th:href="@{/resources/css/site.css}" />
+    <script th:src="@{/resources/js/jquery-3.6.0.js}"></script>
+  </head>
+  <body>
+    <nav th:fragment="level" class="level mb-0">
+      <div class="level-left">
+        <div class="level-item">
+          <a
+            class="navbar-item has-text-weight-bold has-text-warning is-size-3"
+            th:href="@{/}">
+            TROLL MARKET
+          </a>
+        </div>
+      </div>
+      <div class="level-right">
+        <span class="level-item">
+          <strong>Welcome,</strong>
+          &nbsp;
+          <p th:text="${#authentication.getName()}"></p>
+        </span>
+        <form method="post" th:attr="action=@{/logout}">
+          <input
+            type="hidden"
+            th:name="${_csrf.parameterName}"
+            th:value="${_csrf.token}" />
+          <p class="level-item">
+            <button class="button is-danger">Logout</button>
+          </p>
+        </form>
+      </div>
+    </nav>
+    <nav
+      th:fragment="navigation"
+      class="navbar is-success has-shadow"
+      role="navigation"
+      aria-label="main navigation">
+      <div class="navbar-brand has-text-weight-medium is-size-4">
+        <a class="navbar-item" id="home" th:href="@{/}">Home</a>
+        <a class="navbar-item" id="profile" th:href="@{/profile}">Profile</a>
+        <a class="navbar-item" id="shop" th:href="@{/shop}">Shop</a>
+        <a class="navbar-item" id="merchandise" th:href="@{/merchandise}">
+          Merchandise
+        </a>
+        <a class="navbar-item" id="shipment" th:href="@{/shipment}">Shipment</a>
+        <a class="navbar-item" id="cart" th:href="@{/cart}">My Cart</a>
+        <a class="navbar-item" id="admin" th:href="@{/admin}">Admin</a>
+        <a class="navbar-item" id="history" th:href="@{/history}">History</a>
+        <span
+          class="role"
+          th:text="${#authentication.getAuthorities()}"
+          style="display: none"></span>
+      </div>
+    </nav>
+
+    <nav
+      class="breadcrumb has-arrow-separator mt-3 mb-2"
+      aria-label="breadcrumbs"
+      th:fragment="header (title, detail)">
+      <ul class="breadcrumb-link">
+        <li><a th:href="@{/}">Troll Market</a></li>
+        <li><a th:attr="data-href=|/${title}|" th:text="${title}"></a></li>
+        <li><a th:href="@{#}" th:text="${detail}"></a></li>
+      </ul>
+    </nav>
+
+    <footer th:fragment="footer" class="footer p-0">
+      <div class="container is-fullhd">
+        <div class="notification has-text-centered">
+          <p>
+            <strong>Troll Market</strong>
+            by
+            <a href="https://instagram.com/inf00">Isnaeni Nurfalah</a>
+            . &copy; 2022 . Built With Bulma . The source code is licensed
+            <a href="http://opensource.org/licenses/mit-license.php">MIT</a>
+            . The website content is licensed
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+              CC BY NC SA 4.0
+            </a>
+            .
+          </p>
+        </div>
+      </div>
+    </footer>
+    <th:block th:fragment="javascript">
+      <script th:src="@{/resources/js/site.js}" defer></script>
+    </th:block>
+  </body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head th:replace="~{layout :: head}"></head>
+  <body>
+    <section class="section pb-3 pt-2">
+      <nav th:replace="~{layout :: level}"></nav>
+      <nav th:replace="~{layout :: navigation}"></nav>
+      <section class="section p-4">
+        <nav th:replace="~{layout :: header (History, Index)}"></nav>
+        <form
+          method="get"
+          th:attr="action=@{/history}"
+          class="field is-grouped">
+          <p class="control select">
+            <select name="seller">
+              <option th:value="null">Find By Seller</option>
+              <option
+                th:each="option : ${sellerDropdown}"
+                th:text="${option.text}"
+                th:selected="${option.value == seller}"></option>
+            </select>
+          </p>
+          <p class="control select">
+            <select name="buyer">
+              <option th:value="null">Find By buyer</option>
+              <option
+                th:each="option : ${buyerDropdown}"
+                th:text="${option.text}"
+                th:selected="${option.value == buyer}"></option>
+            </select>
+          </p>
+          <p class="control">
+            <button type="submit" class="button is-info">Search</button>
+          </p>
+        </form>
+        <div class="table-container">
+          <table class="table is-size-6 is-fullwidth is-bordered">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Seller</th>
+                <th>Buyer</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Shipment</th>
+                <th>Total Price</th>
+              </tr>
+            </thead>
+            <tbody class="is-size-10">
+              <tr th:each="history : ${dataGrid}" th:object="${history}">
+                <td th:text="*{purchaseDate}"></td>
+                <td th:text="*{seller}"></td>
+                <td th:text="*{buyer}"></td>
+                <td th:text="*{productName}"></td>
+                <td th:text="*{quantity}"></td>
+                <td th:text="*{shipment}"></td>
+                <td th:text="*{#numbers.formatCurrency(totalPrice)}"></td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="7">
+                  <div class="pagination is-right">
+                    <div
+                      class="pagination-previous"
+                      th:text="|Page ${currentPage} of ${totalPages}|"></div>
+                    <ul class="pagination-list" th:if="${totalPages != 0}">
+                      <li th:each="page:${#numbers.sequence(1,totalPages)}">
+                        <a
+                          class="pagination-link"
+                          th:href="@{/history(page=${page})}"
+                          th:text="${page}"></a>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </section>
+    </section>
+    <footer th:replace="~{layout :: footer}"></footer>
+    <th:block th:replace="~{layout :: javascript}"></th:block>
+  </body>
+</html>

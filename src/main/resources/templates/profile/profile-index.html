@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head th:replace="~{layout :: head}"></head>
+  <body>
+    <section class="section pb-3 pt-2">
+      <nav th:replace="~{layout :: level}"></nav>
+      <nav th:replace="~{layout :: navigation}"></nav>
+      <section class="section p-4">
+        <nav th:replace="~{layout :: header (Profile, Index)}"></nav>
+        <p class="title mb-4">Information About Your Profile</p>
+        <table
+          class="table is-size-5 is-fullwidth is-bordered"
+          th:object="${profile}">
+          <tbody>
+            <span id="buyer-id" th:text="*{id}" style="display: none"></span>
+            <tr>
+              <td>Name</td>
+              <td th:text="*{name}"></td>
+            </tr>
+            <tr>
+              <td>Role</td>
+              <td th:text="*{role}"></td>
+            </tr>
+            <tr>
+              <td>Address</td>
+              <td th:text="*{address}"></td>
+            </tr>
+            <tr>
+              <td>Balance</td>
+              <td
+                id="profile-balance"
+                th:text="*{#numbers.formatCurrency(balance)}"
+                class="moneyConversion"></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <section class="section p-4 table-grid">
+        <p class="subtitle is-size-5 mb-4">
+          <strong>My Transaction History</strong>
+        </p>
+        <table class="table is-size-6 is-fullwidth is-bordered">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Shipment</th>
+              <th>Total Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="transaction : ${dataGrid}" th:object="${transaction}">
+              <td th:text="*{purchaseDate}"></td>
+              <td th:text="*{productName}"></td>
+              <td th:text="*{quantity}"></td>
+              <td th:text="*{shipment}"></td>
+              <td th:text="*{#numbers.formatCurrency(totalPrice)}"></td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="5">
+                <div class="pagination is-right">
+                  <div
+                    class="pagination-previous"
+                    th:text="|Page ${currentPage} of ${totalPages}|"></div>
+                  <ul class="pagination-list" th:if="${totalPages != 0}">
+                    <li th:each="page:${#numbers.sequence(1,totalPages)}">
+                      <a
+                        class="pagination-link"
+                        th:href="@{/profile(page=${page})}"
+                        th:text="${page}"></a>
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+      <!-- Modals for ADD BALANCE BUYER -->
+      <div id="modal-add-balance" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Tambah Dana</p>
+            <button class="delete" aria-label="close"></button>
+          </header>
+          <section class="modal-card-body">
+            <div class="field">
+              <label class="label">Tambah Dana Sebesar</label>
+              <div class="control">
+                <input
+                  class="input moneyConversion"
+                  id="balance-value"
+                  type="text" />
+              </div>
+            </div>
+          </section>
+          <footer class="modal-card-foot">
+            <button
+              class="button is-success"
+              th:onclick="addNewBuyerBalance();">
+              Save changes
+            </button>
+            <button class="button">Cancel</button>
+          </footer>
+        </div>
+      </div>
+    </section>
+    <footer th:replace="~{layout :: footer}"></footer>
+    <th:block th:replace="~{layout :: javascript}"></th:block>
+  </body>
+</html>

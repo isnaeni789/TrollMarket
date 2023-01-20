@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{layout :: head}"></head>
+  <body>
+    <div class="hero is-fullheight">
+      <div class="hero-body is-justify-content-center is-align-items-center">
+        <div class="columns is-flex is-flex-direction-column box">
+          <h1
+            class="has-text-centered has-text-weight-bold has-text-primary is-size-3">
+            Troll Market Register Form
+          </h1>
+          <form
+            method="post"
+            th:attr="action=@{/account/save-account}"
+            th:object="${dto}">
+            <input
+              type="hidden"
+              th:name="${_csrf.parameterName}"
+              th:value="${_csrf.token}" />
+            <div class="column">
+              <label>Username</label>
+              <input
+                class="input"
+                type="text"
+                placeholder="Username"
+                th:field="*{username}" />
+              <p class="help is-danger" th:errors="*{username}"></p>
+            </div>
+            <div class="column">
+              <label>Password</label>
+              <input
+                class="input"
+                type="password"
+                placeholder="Password"
+                th:field="*{password}" />
+              <p class="help is-danger" th:errors="*{password}"></p>
+            </div>
+            <div class="column">
+              <label>Confirm Password</label>
+              <input
+                class="input"
+                type="password"
+                placeholder="Confirm Password"
+                th:field="*{confirmPassword}" />
+              <p class="help is-danger" th:errors="${dto}"></p>
+            </div>
+            <div class="column">
+              <label>Full Name</label>
+              <input
+                class="input"
+                type="text"
+                placeholder="Full Name"
+                th:field="*{name}" />
+              <p class="help is-danger" th:errors="*{name}"></p>
+            </div>
+            <div class="column">
+              <label>Address</label>
+              <textarea
+                class="textarea"
+                placeholder="Address"
+                th:field="*{address}"></textarea>
+              <p class="help is-danger" th:errors="*{address}"></p>
+            </div>
+            <input type="hidden" th:value="${role}" id="role" name="role" />
+            <div class="column">
+              <button class="button is-primary is-fullwidth" type="submit">
+                Register
+              </button>
+              <p class="help is-danger" th:errors="*{role}"></p>
+            </div>
+            <div class="has-text-centered">
+              <p class="is-size-7">
+                <a th:href="@{/account/login-form}" class="has-text-primary">
+                  Login page
+                </a>
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <th:block th:replace="~{layout :: javascript}"></th:block>
+  </body>
+</html>

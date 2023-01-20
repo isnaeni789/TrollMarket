@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head th:replace="~{layout :: head}"></head>
+  <body>
+    <section class="section pb-3 pt-2">
+      <nav th:replace="~{layout :: level}"></nav>
+      <nav th:replace="~{layout :: navigation}"></nav>
+      <section class="section p-4">
+        <nav th:replace="~{layout :: header (Shop, Index)}"></nav>
+        <form method="get" th:attr="action=@{/shop}" class="field is-grouped">
+          <p class="control is-expanded">
+            <input
+              class="input"
+              type="text"
+              name="name"
+              placeholder="Product Name"
+              th:attr="value=${name}" />
+          </p>
+          <p class="control is-expanded">
+            <input
+              class="input"
+              type="text"
+              name="category"
+              placeholder="Category Name"
+              th:attr="value=${category}" />
+          </p>
+          <p class="control is-expanded">
+            <input
+              class="input"
+              type="text"
+              name="description"
+              placeholder="Description"
+              th:attr="value=${description}" />
+          </p>
+          <p class="control">
+            <button type="submit" class="button is-info">Search</button>
+          </p>
+        </form>
+        <table class="table is-size-6 is-fullwidth is-bordered">
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th>Name</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody class="is-size-10">
+            <tr th:each="shop : ${dataGrid}" th:object="${shop}">
+              <td>
+                <a
+                  class="button is-warning is-small js-modal-trigger"
+                  data-target="modal-add-cart"
+                  th:onclick="|getProductId('*{id}');|">
+                  <i class="fas fa-user-edit"></i>
+                  <span>Add to Cart</span>
+                </a>
+                <a
+                  class="button is-info is-small js-modal-trigger"
+                  data-target="modal-product-shop-info"
+                  th:onclick="|getProductShopInfo('*{id}');|">
+                  <i class="fas fa-info"></i>
+                  <span>Detail Info</span>
+                </a>
+              </td>
+              <td th:text="*{name}"></td>
+              <td
+                class="moneyConversion"
+                th:text="*{#numbers.formatCurrency(price)}"></td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3">
+                <div class="pagination is-right">
+                  <div
+                    class="pagination-previous"
+                    th:text="|Page ${currentPage} of ${totalPages}|"></div>
+                  <ul class="pagination-list" th:if="${totalPages != 0}">
+                    <li th:each="page:${#numbers.sequence(1,totalPages)}">
+                      <a
+                        class="pagination-link"
+                        th:href="@{/merchandise(page=${page}, name=${name}, category=${category}, description=${description})}"
+                        th:text="${page}"></a>
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <!-- Modals for Product Info in Shop menu -->
+        <div id="modal-product-shop-info" class="modal">
+          <div class="modal-background"></div>
+          <div class="modal-card">
+            <header class="modal-card-head">
+              <p class="modal-card-title">Product Information</p>
+              <button class="delete" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+              <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                  <input
+                    class="input"
+                    id="product-info-name"
+                    type="text"
+                    readonly />
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Category</label>
+                <div class="control">
+                  <input
+                    class="input"
+                    id="product-info-category"
+                    type="text"
+                    readonly />
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Description</label>
+                <div class="control">
+                  <textarea
+                    class="textarea"
+                    id="product-info-description"
+                    readonly></textarea>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Price</label>
+                <div class="control">
+                  <input
+                    class="input moneyConversion"
+                    id="product-info-price"
+                    type="text"
+                    readonly />
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Seller Name</label>
+                <div class="control">
+                  <input
+                    class="input"
+                    id="product-info-seller"
+                    type="text"
+                    readonly />
+                </div>
+              </div>
+            </section>
+            <footer class="modal-card-foot"></footer>
+          </div>
+        </div>
+
+        <!-- Modal to add cart in shop menu -->
+        <div id="modal-add-cart" class="modal">
+          <div class="modal-background"></div>
+          <div class="modal-card">
+            <header class="modal-card-head">
+              <p class="modal-card-title">Tambahkan Keranjang</p>
+              <button class="delete" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+              <input type="hidden" id="cart-product-id" />
+              <input type="hidden" id="cart-buyer-id" th:value="${buyerId}" />
+              <div class="field">
+                <label class="label">Quantity</label>
+                <div class="control">
+                  <input
+                    class="input"
+                    id="cart-quantity"
+                    type="number"
+                    min="0" />
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Shipment</label>
+                <div class="select">
+                  <select id="cart-shipment">
+                    <option
+                      th:each="option : ${shipmentDropdown}"
+                      th:value="${option.value}"
+                      th:text="${option.text}"></option>
+                  </select>
+                </div>
+              </div>
+            </section>
+            <footer class="modal-card-foot">
+              <button class="button is-success" th:onclick="upsertCart();">
+                Save changes
+              </button>
+              <button class="button">Cancel</button>
+            </footer>
+          </div>
+        </div>
+      </section>
+    </section>
+    <footer th:replace="~{layout :: footer}"></footer>
+    <th:block th:replace="~{layout :: javascript}"></th:block>
+  </body>
+</html>

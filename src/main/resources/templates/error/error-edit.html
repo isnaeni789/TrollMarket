@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{layout :: head}"></head>
+  <body>
+    <section class="section pb-3 pt-2">
+      <nav th:replace="~{layout :: level}"></nav>
+      <nav th:replace="~{layout :: navigation}"></nav>
+      <section class="section p-4">
+        <section class="section is-small">
+          <div class="container">
+            <div class="columns is-vcentered">
+              <div class="column has-text-centered">
+                <h1 class="title" th:text="|Fail to Edit ${object}|"></h1>
+                <h2
+                  class="subtitle"
+                  th:text="|Tidak bisa edit ${object} dikarenakan ada sudah ada ${dependencies} transaksi di order.|"></h2>
+                <a class="button" th:href="@{/}">Home</a>
+                <a class="button" th:href="@{/}">Contact</a>
+              </div>
+              <div class="column has-text-centered">
+                <img th:src="@{/resources/image/fail.png}" class="p-6" />
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </section>
+    <footer th:replace="~{layout :: footer}"></footer>
+    <th:block th:replace="~{layout :: javascript}"></th:block>
+  </body>
+</html>

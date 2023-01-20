@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head th:replace="~{layout :: head}"></head>
+  <body>
+    <section class="section pb-3 pt-2">
+      <nav th:replace="~{layout :: level}"></nav>
+      <nav th:replace="~{layout :: navigation}"></nav>
+      <section class="section p-4">
+        <nav
+          th:replace="~{layout :: header (Merchandise, ${actionType} + 'Product')}"></nav>
+        <h1 class="title" th:text="|${actionType} Product|"></h1>
+        <form
+          method="post"
+          th:object="${dto}"
+          th:attr="action=@{/merchandise/save}">
+          <input
+            type="hidden"
+            th:name="${_csrf.parameterName}"
+            th:value="${_csrf.token}" />
+          <input type="hidden" th:field="*{id}" />
+          <input
+            type="hidden"
+            th:value="${sellerId}"
+            id="sellerId"
+            name="sellerId" />
+          <div class="field">
+            <label class="label">Name*</label>
+            <div class="control">
+              <input
+                class="input"
+                type="text"
+                th:field="*{name}"
+                placeholder="Product Name" />
+            </div>
+            <p class="help is-danger" th:errors="*{name}"></p>
+          </div>
+          <div class="field">
+            <label class="label">Category*</label>
+            <div class="select">
+              <select th:field="*{categoryId}" class="readonly-select">
+                <option
+                  th:each="option : ${categoryDropdown}"
+                  th:value="${option.value}"
+                  th:text="${option.text}"></option>
+              </select>
+            </div>
+            <p class="help is-danger" th:errors="*{categoryId}"></p>
+          </div>
+          <div class="field">
+            <label class="label">Description</label>
+            <div class="control">
+              <textarea
+                class="textarea"
+                placeholder="Description"
+                th:field="*{description}"></textarea>
+            </div>
+            <p class="help is-danger" th:errors="*{description}"></p>
+          </div>
+          <div class="field">
+            <label class="label">Price*</label>
+            <div class="control">
+              <input
+                class="input moneyConversion"
+                type="number"
+                th:field="*{price}"
+                placeholder="Price" />
+            </div>
+            <p class="help is-danger" th:errors="*{price}"></p>
+          </div>
+          <div class="field">
+            <label class="checkbox is-size-6 mt-2">
+              <input type="checkbox" th:field="*{discontinue}" />
+              Discontinue
+            </label>
+            <p class="help is-danger" th:errors="*{discontinue}"></p>
+          </div>
+          <div class="field is-grouped">
+            <div class="control">
+              <button class="button is-link" type="submit">Submit</button>
+            </div>
+            <div class="control">
+              <a class="button is-link is-light" th:href="@{/merchandise}">
+                Cancel
+              </a>
+            </div>
+          </div>
+        </form>
+      </section>
+      <footer th:replace="~{layout :: footer}"></footer>
+      <th:block th:replace="~{layout :: javascript}"></th:block>
+    </section>
+  </body>
+</html>

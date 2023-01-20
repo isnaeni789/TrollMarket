@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head th:replace="~{layout :: head}"></head>
+  <body>
+    <section class="section pb-3 pt-2">
+      <nav th:replace="~{layout :: level}"></nav>
+      <nav th:replace="~{layout :: navigation}"></nav>
+
+      <section class="section p-4">
+        <nav th:replace="~{layout :: header (Shipment, Index)}"></nav>
+        <button
+          data-target="modal-add-shipment"
+          th:onclick="addNewShipment();"
+          class="js-modal-trigger button is-info mt-2 mb-4">
+          Add New Shipment
+        </button>
+        <table class="table is-size-6 is-fullwidth is-bordered">
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th>Name</th>
+              <th>Price</th>
+              <th>Service</th>
+            </tr>
+          </thead>
+          <tbody class="is-size-10">
+            <tr th:each="shipment : ${dataGrid}" th:object="${shipment}">
+              <td>
+                <a
+                  class="button is-warning is-small js-modal-trigger"
+                  data-target="modal-add-shipment"
+                  th:if="${shipment.service}"
+                  th:onclick="|getUpdateShipment('*{id}');|">
+                  <i class="fas fa-user-edit"></i>
+                  <span>Edit</span>
+                </a>
+                <a
+                  class="button is-warning is-small"
+                  th:unless="${shipment.service}"
+                  disabled>
+                  <i class="fas fa-user-edit"></i>
+                  <span>Edit</span>
+                </a>
+                <a
+                  class="button is-danger is-small"
+                  th:href="@{/shipment/delete(id=*{id})}">
+                  <i class="fas fa-trash"></i>
+                  <span>Delete</span>
+                </a>
+                <a
+                  class="button is-primary is-small"
+                  th:if="${shipment.service}"
+                  th:href="@{/shipment/stop-service(id=*{id})}">
+                  <i class="fas fa-book"></i>
+                  <span>Stop Service</span>
+                </a>
+                <a
+                  class="button is-primary is-small"
+                  th:unless="${shipment.service}"
+                  disabled>
+                  <i class="fas fa-book"></i>
+                  <span>Stop Service</span>
+                </a>
+              </td>
+              <td th:text="*{name}"></td>
+              <td th:text="*{#numbers.formatCurrency(price)}"></td>
+              <td th:text="*{service}"></td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4">
+                <div class="pagination is-right">
+                  <div
+                    class="pagination-previous"
+                    th:text="|Page ${currentPage} of ${totalPages}|"></div>
+                  <ul class="pagination-list" th:if="${totalPages != 0}">
+                    <li th:each="page:${#numbers.sequence(1,totalPages)}">
+                      <a
+                        class="pagination-link"
+                        th:href="@{/shipment(page=${page})}"
+                        th:text="${page}"></a>
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <!-- Modals for Add/Edit Shipment -->
+        <div id="modal-add-shipment" class="modal">
+          <div class="modal-background"></div>
+          <div class="modal-card">
+            <header class="modal-card-head">
+              <p class="modal-card-title">Form Shipment</p>
+              <button class="delete" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+              <input type="hidden" id="shipment-id" />
+              <div class="field">
+                <label class="label">Name*</label>
+                <div class="control">
+                  <input
+                    class="input"
+                    id="shipment-name"
+                    type="text"
+                    required />
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Price*</label>
+                <div class="control">
+                  <input
+                    class="input moneyConversion"
+                    id="shipment-price"
+                    type="text"
+                    required />
+                </div>
+              </div>
+              <div class="field">
+                <label class="checkbox is-size-6 mt-2 has-text-weight-bold">
+                  <input type="checkbox" id="shipment-is-active" />
+                  Service
+                </label>
+              </div>
+            </section>
+            <footer class="modal-card-foot">
+              <button class="button is-success" th:onclick="upsertShipment();">
+                Save changes
+              </button>
+              <button class="button">Cancel</button>
+            </footer>
+          </div>
+        </div>
+      </section>
+    </section>
+    <footer th:replace="~{layout :: footer}"></footer>
+    <th:block th:replace="~{layout :: javascript}"></th:block>
+  </body>
+</html>

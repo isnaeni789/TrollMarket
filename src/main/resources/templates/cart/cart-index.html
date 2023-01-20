@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head th:replace="~{layout :: head}"></head>
+  <body>
+    <section class="section pb-3 pt-2">
+      <nav th:replace="~{layout :: level}"></nav>
+      <nav th:replace="~{layout :: navigation}"></nav>
+      <section class="section p-4">
+        <nav th:replace="~{layout :: header (Cart, Index)}"></nav>
+        <a class="button is-info mt-2 mb-4" th:href="@{/cart/purchase-all}">
+          Purchase All
+        </a>
+
+        <table class="table is-size-6 is-fullwidth is-bordered">
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Shipment</th>
+              <th>Seller</th>
+              <th>Total Price</th>
+            </tr>
+          </thead>
+          <tbody class="is-size-10">
+            <tr th:each="cart : ${dataGrid}" th:object="${cart}">
+              <td>
+                <a
+                  class="button is-danger is-small"
+                  th:href="@{/cart/delete(id=*{id})}">
+                  <i class="fas fa-trash"></i>
+                  <span>Delete</span>
+                </a>
+              </td>
+              <td th:text="*{productName}"></td>
+              <td th:text="*{quantity}"></td>
+              <td th:text="*{shipment}"></td>
+              <td th:text="*{seller}"></td>
+              <td th:text="*{#numbers.formatCurrency(totalPrice)}"></td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="6">
+                <div class="pagination is-right">
+                  <div
+                    class="pagination-previous"
+                    th:text="|Page ${currentPage} of ${totalPages}|"></div>
+                  <ul class="pagination-list" th:if="${totalPages != 0}">
+                    <li th:each="page:${#numbers.sequence(1,totalPages)}">
+                      <a
+                        class="pagination-link"
+                        th:href="@{/cart(page=${page})}"
+                        th:text="${page}"></a>
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+    </section>
+    <footer th:replace="~{layout :: footer}"></footer>
+    <th:block th:replace="~{layout :: javascript}"></th:block>
+  </body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head th:replace="~{layout :: head}"></head>
+  <body>
+    <section class="section pb-3 pt-2">
+      <nav th:replace="~{layout :: level}"></nav>
+      <nav th:replace="~{layout :: navigation}"></nav>
+      <section class="section p-4">
+        <nav th:replace="~{layout :: header (Merchandise, Index)}"></nav>
+        <a
+          class="button button is-info mt-2 mb-4"
+          th:href="@{/merchandise/upsert-product}">
+          Add New Product
+        </a>
+        <table class="table is-size-6 is-fullwidth is-bordered">
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Discontinue</th>
+            </tr>
+          </thead>
+          <tbody class="is-size-10">
+            <tr th:each="merchandise : ${dataGrid}" th:object="${merchandise}">
+              <td>
+                <a
+                  class="button is-warning is-small"
+                  th:if="${merchandise.discontinue}"
+                  disabled>
+                  <i class="fas fa-user-edit"></i>
+                  <span>Edit</span>
+                </a>
+                <a
+                  class="button is-warning is-small"
+                  th:unless="${merchandise.discontinue}"
+                  th:href="@{/merchandise/upsert-product(id=*{id})}">
+                  <i class="fas fa-user-edit"></i>
+                  <span>Edit</span>
+                </a>
+                <a
+                  class="button is-danger is-small"
+                  th:href="@{/merchandise/delete(id=*{id})}">
+                  <i class="fas fa-trash"></i>
+                  <span>Delete</span>
+                </a>
+                <a
+                  class="button is-info is-small js-modal-trigger"
+                  data-target="modal-merchandise-info-product"
+                  th:onclick="|getProductMerchandiseInfo('*{id}');|">
+                  <i class="fas fa-info"></i>
+                  <span>Info</span>
+                </a>
+                <a
+                  class="button is-primary is-small"
+                  th:if="${merchandise.discontinue}"
+                  disabled>
+                  <i class="fas fa-book"></i>
+                  <span>Discontinue</span>
+                </a>
+                <a
+                  class="button is-primary is-small"
+                  th:unless="${merchandise.discontinue}"
+                  th:href="@{/merchandise/discontinue(id=*{id})}">
+                  <i class="fas fa-book"></i>
+                  <span>Discontinue</span>
+                </a>
+              </td>
+              <td th:text="*{name}"></td>
+              <td th:text="*{categoryName}"></td>
+              <td th:text="*{discontinue}"></td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4">
+                <div class="pagination is-right">
+                  <div
+                    class="pagination-previous"
+                    th:text="|Page ${currentPage} of ${totalPages}|"></div>
+                  <ul class="pagination-list" th:if="${totalPages != 0}">
+                    <li th:each="page:${#numbers.sequence(1,totalPages)}">
+                      <a
+                        class="pagination-link"
+                        th:href="@{/merchandise(page=${page})}"
+                        th:text="${page}"></a>
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <!-- Modals for merchandise info product -->
+        <div id="modal-merchandise-info-product" class="modal">
+          <div class="modal-background"></div>
+          <div class="modal-card">
+            <header class="modal-card-head">
+              <p class="modal-card-title">Product Information</p>
+              <button class="delete" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+              <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                  <input
+                    class="input"
+                    id="product-merchandise-name"
+                    type="text"
+                    readonly />
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Category</label>
+                <div class="control">
+                  <input
+                    class="input"
+                    id="product-merchandise-category"
+                    type="text"
+                    readonly />
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Description</label>
+                <div class="control">
+                  <textarea
+                    class="textarea"
+                    id="product-merchandise-description"
+                    readonly></textarea>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Price</label>
+                <div class="control">
+                  <input
+                    class="input moneyConversion"
+                    id="product-merchandise-price"
+                    type="text"
+                    readonly />
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Discontinue</label>
+                <div class="control">
+                  <input
+                    class="input"
+                    id="product-merchandise-discontinue"
+                    type="text"
+                    readonly />
+                </div>
+              </div>
+            </section>
+            <footer class="modal-card-foot"></footer>
+          </div>
+        </div>
+      </section>
+    </section>
+    <footer th:replace="~{layout :: footer}"></footer>
+    <th:block th:replace="~{layout :: javascript}"></th:block>
+  </body>
+</html>
