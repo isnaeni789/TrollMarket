@@ -2,6 +2,7 @@ package com.trollmarket.controller;
 
 import com.trollmarket.dto.product.UpsertProductDTO;
 import com.trollmarket.dto.utility.DropdownDTO;
+import com.trollmarket.service.MerchandiseService;
 import com.trollmarket.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,7 +19,7 @@ import java.util.List;
 public class MerchandiseController {
 
     @Autowired
-    private ProductService service;
+    private MerchandiseService service;
 
     @GetMapping
     public String index(@RequestParam(defaultValue = "1")Integer page, Model model){

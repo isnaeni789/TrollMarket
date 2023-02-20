@@ -5,8 +5,6 @@ import com.trollmarket.dto.merchandise.ProductMerchandiseGridDTO;
 import com.trollmarket.dto.merchandise.ProductMerchandiseInfoDTO;
 import com.trollmarket.dto.product.SingleProductDTO;
 import com.trollmarket.dto.product.UpsertProductDTO;
-import com.trollmarket.dto.shop.ProductShopGridDTO;
-import com.trollmarket.dto.shop.ProductShopInfoDTO;
 import com.trollmarket.dto.utility.DropdownDTO;
 import com.trollmarket.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ProductService {
+public class MerchandiseService {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -28,28 +26,26 @@ public class ProductService {
     @Autowired
     private SellerRepository sellerRepository;
     @Autowired
-    private ShipperRepository shipperRepository;
-    @Autowired
     private BuyerRepository buyerRepository;
-
+    
     /*Menu Merchandise for Seller*/
     public Page<ProductMerchandiseGridDTO> getProductMerchandiseGrid(Integer pageNumber){
         String username = getUserLogin();
         var pageable = PageRequest.of(pageNumber - 1, 10, Sort.by("id"));
         return productRepository.findBySellerUsername(username, pageable);
     }
-
+    
     public ProductMerchandiseInfoDTO getProductInfo(Long id){
         return productRepository.findMerchandiseInfoProduct(id);
     }
-
+    
     public UpsertProductDTO getUpdate(Long id){
         var entity = productRepository.findById(id).get();
         return new UpsertProductDTO(entity.getId(), entity.getName(), entity.getSellerId(),
                 entity.getCategoryId(), entity.getDescription(), entity.getPrice(),
                 entity.getDiscontinue());
     }
-
+    
     public SingleProductDTO saveProduct(UpsertProductDTO dto){
         Product entity = new Product(dto.getId(), dto.getName(),
                 dto.getSellerId(), dto.getCategoryId(), dto.getDescription(),
@@ -61,36 +57,24 @@ public class ProductService {
                 .price(entity.getPrice()).discontinue(entity.getDiscontinue())
                 .build();
     }
-
+    
     public Long delete(Long id){
         Long dependencies = getDependencies(id);
         if (dependencies < 1){ productRepository.deleteById(id); }
         return dependencies;
     }
-
+    
     public Long getDependencies(Long id){ return productRepository.countDependencies(id); }
     public List<DropdownDTO> getCategoryDropdown(){
         return categoryRepository.getDropdown();
     }
-
+    
     public void discontinue(Long id){
         Product product = productRepository.findById(id).get();
         product.setDiscontinue(true);
         productRepository.save(product);
     }
-
-
-    /*Menu Shop for Buyer*/
-    public Page<ProductShopGridDTO> getProductShopGrid(Integer pageNumber, String name, String category, String description){
-        var pageable = PageRequest.of(pageNumber - 1, 10, Sort.by("id"));
-        return productRepository.findAllShopProduct(name, category, description, pageable);
-    }
-    public ProductShopInfoDTO getProductShopInfo(Long id){
-        return productRepository.findShopInfoProduct(id);
-    }
-    public List<DropdownDTO> getShipperDropdown(){ return shipperRepository.getShipmentDropdown();}
-
-    /*----GET User Authentication-------*/
+    
     public Long getSellerId() {
         String username = getUserLogin();
         return sellerRepository.getSellerId(username);
@@ -103,5 +87,4 @@ public class ProductService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getName();
     }
-    /*-----------------------------------*/
 }

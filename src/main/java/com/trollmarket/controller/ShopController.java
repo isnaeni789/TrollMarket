@@ -2,6 +2,7 @@ package com.trollmarket.controller;
 
 import com.trollmarket.dto.utility.DropdownDTO;
 import com.trollmarket.service.ProductService;
+import com.trollmarket.service.ShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +17,7 @@ import java.util.List;
 public class ShopController {
 
     @Autowired
-    private ProductService service;
+    private ShopService service;
 
     @GetMapping
     public String index(@RequestParam(defaultValue = "1") Integer page,
