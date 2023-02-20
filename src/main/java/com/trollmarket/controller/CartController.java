@@ -1,5 +1,6 @@
 package com.trollmarket.controller;
 
+import com.trollmarket.service.CartService;
 import com.trollmarket.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class CartController {
 
     @Autowired
-    private OrderService service;
+    private CartService service;
 
     @GetMapping
     public String index(@RequestParam(defaultValue = "1")Integer page, Model model){

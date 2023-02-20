@@ -31,46 +31,7 @@ public class OrderService {
     private SellerRepository sellerRepository;
     @Autowired
     private ProductRepository productRepository;
-
-    /*----------------------------Menu Cart for Buyer----------------------------------------*/
-    public List<CartGridDTO> getCartGrid(){
-        String username = getUserLogin();
-        return orderRepository.findByBuyer(username);
-    }
-    @Transactional
-    public void purchaseAll(){
-        /*Find Buyer who login*/
-        Buyer buyer = buyerRepository.findById(getBuyerId()).get(); //buyer id match from uname
-        Double buyerBalance = buyer.getBalance();
-        /*Find Cart Buyer*/
-        List<CartGridDTO> cart = orderRepository.findByBuyer(getUserLogin());
-        /*SUM Total Price Cart*/
-        Double totalPrice = 0.0;
-        for (CartGridDTO dto : cart) {
-            totalPrice += dto.getTotalPrice();
-        }
-        /*Check the buyer balance*/
-        if (buyerBalance >= totalPrice){
-            for (CartGridDTO dto : cart) {
-                Order order = orderRepository.findById(dto.getId()).get();
-                order.setPurchaseDate(LocalDate.now());
-                order.setUnitPrice(dto.getUnitPrice()); // Set unit price from price product up to date
-                Seller seller = sellerRepository.findById(dto.getSellerId()).get();
-                var balance = dto.getUnitPrice() * dto.getQuantity();
-                Double sellerBalance = seller.getBalance();
-                seller.setBalance(sellerBalance + balance);
-                orderRepository.save(order);
-                sellerRepository.save(seller);
-            }
-            buyer.setBalance(buyerBalance - totalPrice);
-            buyerRepository.save(buyer);
-        }
-    }
-    public void deleteCart(Long id){
-        orderRepository.deleteById(id);
-    }
-
-    /*----------------------------------------------------------------------------------------*/
+    
 
     /*Rest Controller Add Cart in menu Shop Buyer*/
     public void addCart(UpsertCartDTO dto){
@@ -101,15 +62,7 @@ public class OrderService {
             orderRepository.save(order);
         }
     }
-
-    /*------------------------Menu History for Admin-------------------------------------------*/
-    public Page<HistoryGridDTO> getHistoryGrid(Integer pageNumber, String buyer, String seller){
-        var pageable = PageRequest.of(pageNumber - 1, 10, Sort.by("purchaseDate"));
-        return orderRepository.findHistory(buyer, seller, pageable);
-    }
-    public List<DropdownDTO> getBuyerDropdown(){return buyerRepository.getBuyerDropdown();}
-    public List<DropdownDTO> getSellerDropdown(){ return sellerRepository.getSellerDropdown();}
-    /*-------------------------------------------------------------------------------------------*/
+    
 
     /*------------------------GET User Authentication--------------------------------------------*/
     public Long getBuyerId() {

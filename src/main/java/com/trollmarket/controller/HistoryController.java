@@ -1,6 +1,7 @@
 package com.trollmarket.controller;
 
 import com.trollmarket.dto.utility.DropdownDTO;
+import com.trollmarket.service.HistoryService;
 import com.trollmarket.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +17,7 @@ import java.util.List;
 public class HistoryController {
 
     @Autowired
-    private OrderService service;
+    private HistoryService service;
 
     @GetMapping
     public String index(@RequestParam(defaultValue = "1")Integer page,
